@@ -1,0 +1,23 @@
+RFC 5321 define el protocolo SMTP, que es el estándar para el envío de correo electrónico en Internet. En el proyecto, este RFC se aplica al implementar un cliente y un servidor SMTP simples que siguen (aunque de forma simplificada) las directrices del protocolo. A continuación se detalla cómo se relacionan:
+
+1. **Secuencia de Comandos SMTP**  
+   - **RFC 5321:** Especifica la secuencia que debe seguirse: saludo (HELO/EHLO), especificación del remitente (MAIL FROM:), destinatarios (RCPT TO:), envío de datos (DATA) y finalización (QUIT). Además, define la estructura y terminación de cada comando (uso de CRLF y, en el caso de DATA, la línea “.\r\n” para terminar el mensaje).  
+   - **En el proyecto:**  
+     - En *smtp_client.py*, el método `send_email` envía los comandos en este orden: "HELO", "MAIL FROM:", "RCPT TO:" (para cada destinatario), "DATA" (envía el mensaje formado con encabezados según RFC 5322 y termina con la secuencia ".\r\n") y finalmente "QUIT".  
+     - En *server.py*, el manejador SMTP (`SMTPServerHandler`) responde de acuerdo a estos comandos, enviando códigos como “220” para el saludo, “250” para confirmar aceptación de remitente y destinatarios, “354” para iniciar el envío de datos, y “221” al recibir el QUIT.
+
+2. **Formato de Mensaje y Encabezados**  
+   - **RFC 5321 y RFC 5322:** El RFC indica que el mensaje debe formarse con encabezados como “From”, “To” y “Subject”, seguidos de un cuerpo, y que la transmisión debe respetar los límites y el formato (por ejemplo, la terminación del bloque de datos con “\r\n.\r\n”).  
+   - **En el proyecto:** El cliente construye el mensaje concatenando estos encabezados y el cuerpo, cumpliendo con la terminación requerida.
+
+3. **Manejo de Estados y Respuestas**  
+   - **RFC 5321:** Define los códigos de respuesta (por ejemplo, 220, 250, 354, 221) y los estados que debe seguir el diálogo entre cliente y servidor.  
+   - **En el proyecto:**  
+     - El cliente espera y muestra las respuestas del servidor después de cada comando, lo que ayuda a validar que se sigue el flujo correcto.  
+     - El servidor mantiene estados simples (como INIT, READY, MAIL_FROM, RCPT_TO, DATA) para procesar los comandos en orden, tal como lo requiere el estándar.
+
+4. **Transparencia en el Envío de Datos**  
+   - **RFC 5321:** Especifica que si una línea del mensaje comienza con un punto, se debe duplicar el punto para evitar confusiones con la línea de terminación.  
+   - **En el proyecto:** Aunque el ejemplo es simple y no implementa todas las verificaciones de transparencia, se respeta la necesidad de terminar el mensaje con la secuencia “.\r\n” en el bloque DATA.
+
+En resumen, el proyecto aplica RFC 5321 al implementar las funciones esenciales de SMTP: la negociación de la conexión, la identificación del remitente y destinatarios, el envío de datos formateados y la finalización correcta de la sesión. Esto te permite enviar y recibir correos de forma básica y conforme a los estándares, lo cual es fundamental para cualquier aplicación que maneje correo electrónico en Internet.

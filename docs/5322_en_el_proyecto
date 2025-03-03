@@ -1,0 +1,17 @@
+RFC 5322 define el formato y la sintaxis de los mensajes de correo electrónico, es decir, cómo deben estructurarse los encabezados (como "From:", "To:" y "Subject:"), el cuerpo del mensaje y la separación entre ambos. En el proyecto se aplica de la siguiente manera:
+
+1. **Construcción del mensaje:**  
+   En el archivo *smtp_client.py*, el método `send_email` forma el mensaje a enviar concatenando líneas de encabezado y luego el cuerpo del mensaje. Por ejemplo, se crean encabezados usando:
+   - `"From: {from_addr}\r\n"`
+   - `"To: {', '.join(to_addrs)}\r\n"`
+   - `"Subject: {subject}\r\n\r\n"`
+   
+   La doble línea en blanco (CRLF) separa la sección de encabezados del cuerpo, siguiendo la estructura requerida por RFC 5322.
+
+2. **Uso de CRLF y límites de línea:**  
+   RFC 5322 especifica que cada línea debe terminar con una secuencia CRLF. En tu proyecto se utilizan "\r\n" para finalizar cada línea del mensaje, lo cual es esencial para cumplir con la norma y asegurar la correcta interpretación del mensaje por otros sistemas de correo.
+
+3. **Compatibilidad e interoperabilidad:**  
+   Al construir el mensaje de acuerdo con RFC 5322, garantizas que el correo tenga el formato esperado por otros servidores y clientes de correo. Esto es crucial para la interoperabilidad en Internet, ya que muchos sistemas esperan encontrar los encabezados y la separación correcta entre ellos y el cuerpo del mensaje.
+
+En resumen, RFC 5322 se aplica en el proyecto a través de la generación de mensajes de correo que respetan la estructura y el formato definido en el estándar (encabezados bien formados, separación con una línea en blanco, uso correcto de CRLF, etc.), lo cual es fundamental para el envío y la recepción exitosa de correos electrónicos.

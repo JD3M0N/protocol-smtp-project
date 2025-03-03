@@ -12,12 +12,12 @@ class SMTPClient:
         """Establece conexión con el servidor SMTP."""
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((self.server, self.port))
-        self._get_response()  # Leer respuesta inicial del servidor (220)
+        self._get_response()  # Leer respuesta inicial del servidor (220) segun RFC 5321
 
     def _send_command(self, command: str):
         """Envía un comando al servidor y guarda la respuesta."""
         self.socket.sendall(f"{command}\r\n".encode())
-        self._get_response()
+        self._get_response() 
 
     def _get_response(self):
         """Lee la respuesta del servidor."""
@@ -25,7 +25,7 @@ class SMTPClient:
         while True:
             data = self.socket.recv(1024)
             self.response += data
-            if data.endswith(b'\r\n'):  # Fin de respuesta
+            if data.endswith(b'\r\n'):  # Fin de respuesta 
                 break
 
     def send_email(self, from_addr: str, to_addrs: list, subject: str, body: str):
@@ -49,10 +49,10 @@ class SMTPClient:
         self._send_command("QUIT")
         
     def _send_command(self, command: str):
-        print(f"[CLIENTE] Enviando: {command}")  # <-- Log
+        print(f"[CLIENTE] Enviando: {command}")  # <-- Log de consola 
         self.socket.sendall(f"{command}\r\n".encode())
         self._get_response()
-        print(f"[CLIENTE] Respuesta: {self.response.decode()}")  # <-- Log
+        print(f"[CLIENTE] Respuesta: {self.response.decode()}")  # <-- Log de consola
 
     def close(self):
         """Cierra la conexión."""

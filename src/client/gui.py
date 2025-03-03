@@ -40,7 +40,7 @@ class SMTPClientGUI:
             messagebox.showerror("Error", "Todos los campos son obligatorios")
             return
 
-        # Configuración del servidor (puedes agregar campos para esto si es necesario)
+        # Configuración del servidor 
         server = "localhost"
         port = 25
 
